@@ -271,7 +271,7 @@ const mn=new THREE.Vector2();
 let drag=false,moved=false;
 let sx=0,sy=0;
 let sq=new THREE.Quaternion();
-let ix=0,iy=0,lvx=0,lvy=0;
+let lvx=0,lvy=0;
 const THR=6,SEN=0.007;
 
 // Get x/y from mouse or touch
@@ -350,7 +350,7 @@ function pointerUp(e){
   drag=false;
   canvas.style.cursor='grab';
   if(moved){
-    ix=lvx*0.18;iy=lvy*0.18;
+    // no inertia — cube stops on release
   }else{
     // TAP = play
     if(!over){
@@ -458,12 +458,6 @@ resize();
 // ─── Render loop ──────────────────────────────────────────────────────────────
 (function loop(){
   requestAnimationFrame(loop);
-  if(!drag&&(Math.abs(ix)>0.0001||Math.abs(iy)>0.0001)){
-    grp.quaternion
-      .premultiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),ix))
-      .premultiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0),iy));
-    ix*=0.88;iy*=0.88;
-  }
   if(winSet.size>0){
     const s=1+0.04*Math.sin(Date.now()*0.004);
     winSet.forEach(bi=>{const e=cells.find(x=>x.bi===bi);if(e&&e.sym)e.sym.scale.setScalar(s);});
