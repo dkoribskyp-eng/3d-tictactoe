@@ -298,7 +298,6 @@ function pointerDown(e){
   drag=true;moved=false;
   sx=cx;sy=cy;
   sq.copy(grp.quaternion);
-  ix=iy=lvx=lvy=0;
   canvas.style.cursor='grabbing';
 }
 
@@ -364,14 +363,14 @@ function pointerUp(e){
   }
 }
 
-// Attach — mouse on window so drag works outside canvas, touch on canvas
+// Mouse — window for move/up so drag outside canvas works
 canvas.addEventListener('mousedown', pointerDown);
-window.addEventListener('mousemove', pointerMove);
-window.addEventListener('mouseup',   pointerUp);
+window.addEventListener('mousemove', e => { if(e.pointerType==='touch') return; pointerMove(e); });
+window.addEventListener('mouseup',   e => { if(e.pointerType==='touch') return; pointerUp(e); });
 canvas.addEventListener('mouseleave',()=>{
   if(!drag){hov=-1;tip.style.display='none';canvas.style.cursor='grab';redraw();}
 });
-// Touch — all three on canvas, passive:false so preventDefault works
+// Touch — fully on canvas, passive:false so preventDefault works
 canvas.addEventListener('touchstart',pointerDown,{passive:false});
 canvas.addEventListener('touchmove', pointerMove,{passive:false});
 canvas.addEventListener('touchend',  pointerUp,  {passive:false});
